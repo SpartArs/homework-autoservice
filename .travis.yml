@@ -3,6 +3,11 @@ jdk: oraclejdk11
 
 script: mvn -e verify
 
+deploy:
+  provider: heroku
+  api_key: $HEROKU_KEY
+  app: itpark-webapp
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 

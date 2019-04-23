@@ -4,11 +4,8 @@ import ru.spartars.domain.Auto;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.http.Part;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +14,18 @@ import java.util.UUID;
 public class AutoService {
     private final DataSource dataSource;
 
-    public AutoService() throws NamingException {
+    public AutoService() throws NamingException, SQLException {
         var context = new InitialContext();
-        this.dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
+        dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
+        try(var conn = dataSource.getConnection()) {
+            try(var stmt = conn.createStatement()) {
+                stmt.execute("CREATE  TABLE IF NOT EXISTS autos " +
+                        "(id TEXT PRIMARY KEY, NAME TEXT NOT NULL, description TEXT NOT NULL, image TEXT);");
+            }
+        }
     }
 
-    public void create(String name, String description, Part file) throws IOException {
-        var fileName = UUID.randomUUID().toString();
-        file.write(fileName);
+    public void create(String name, String description, String image) throws IOException {
 
         try (var conn = dataSource.getConnection()) {
             try (var stmt = conn.prepareStatement(
@@ -35,7 +36,7 @@ public class AutoService {
                 stmt.setString(1, UUID.randomUUID().toString());
                 stmt.setString(2, name);
                 stmt.setString(3, description);
-                stmt.setString(4, fileName);
+                stmt.setString(4, image);
                 stmt.execute();
             }
         } catch (SQLException e) {
@@ -44,29 +45,13 @@ public class AutoService {
         }
     }
 
-    public void update(String id, String name, String description, Part file) throws IOException {
-        var auto = getById(id);
-        String fileName = auto.getImage();
-        if (file != null) {
-            var path = Paths.get("D:/SpringCourse/homeWork/02.Autoservice/upload").resolve(fileName);
-            try {
-                if(Files.exists(path)) {
-                    Files.delete(path);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("File not found");
-            } finally {
-                fileName = UUID.randomUUID().toString();
-                file.write(fileName);
-            }
-        }
-
+    public void update(String id, String name, String description, String image) throws IOException {
         try (var conn = dataSource.getConnection()) {
             try (var stmt = conn.prepareStatement(
                     "UPDATE autos SET name=?, description=?, image=? WHERE id=?")) {
                 stmt.setString(1, name);
                 stmt.setString(2, description);
-                stmt.setString(3, fileName); //TODO
+                stmt.setString(3, image);
                 stmt.setString(4, id);
                 stmt.executeUpdate();
             }
@@ -158,13 +143,6 @@ public class AutoService {
                 stmt.execute();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        var path = Paths.get("D:/SpringCourse/homeWork/02.Autoservice/upload").resolve(image);
-        try {
-            Files.delete(path);
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
