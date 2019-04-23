@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class ImageServlet extends HttpServlet {
+    private final static String UPLOAD_PATH = "D:/SpringCourse/homeWork/02.Autoservice/upload";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -18,7 +19,7 @@ public class ImageServlet extends HttpServlet {
                 throw new RuntimeException();
             }
             var id = split[1];
-            var path = Paths.get("D:/SpringCourse/homeWork/02.Autoservice/upload").resolve(id);
+            var path = Paths.get(UPLOAD_PATH).resolve(id);
             if (!Files.exists(path)) {
                 throw new RuntimeException("404");
             }

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class AutoService {
+    private final static String UPLOAD_PATH = "D:/SpringCourse/homeWork/02.Autoservice/upload";
     private final DataSource dataSource;
 
     public AutoService() throws NamingException, SQLException {
@@ -54,7 +55,7 @@ public class AutoService {
         var auto = getById(id);
         String fileName = auto.getImage();
         if (file != null) {
-            var path = Paths.get("D:/SpringCourse/homeWork/02.Autoservice/upload").resolve(fileName);
+            var path = Paths.get(UPLOAD_PATH).resolve(fileName);
             try {
                 if(Files.exists(path)) {
                     Files.delete(path);
@@ -167,7 +168,7 @@ public class AutoService {
             e.printStackTrace();
         }
 
-        var path = Paths.get("D:/SpringCourse/homeWork/02.Autoservice/upload").resolve(image);
+        var path = Paths.get(UPLOAD_PATH).resolve(image);
         try {
             Files.delete(path);
         } catch (IOException e) {
