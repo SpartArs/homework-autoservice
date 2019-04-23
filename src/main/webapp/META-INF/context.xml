@@ -11,5 +11,11 @@
     <Resource
             name="bean/auto-service"
             type="ru.spartars.service.AutoService"
-            factory="org.apache.naming.factory.BeanFactory" />
+            factory="org.apache.naming.factory.BeanFactory"
+    />
+    <Resource
+            name="bean/file-service"
+            type="ru.spartars.service.FileService"
+            factory="org.apache.naming.factory.BeanFactory"
+    />
 </Context>
