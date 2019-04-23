@@ -71,9 +71,6 @@ public class CatalogServlet extends HttpServlet {
         var name = req.getParameter("name");
         var file = req.getPart("file");
 
-        if(file.getSize() <= 0) {
-            System.out.println("FILE NULL");
-        }
         var description = req.getParameter("description");
         String action = req.getParameter("action");
 
