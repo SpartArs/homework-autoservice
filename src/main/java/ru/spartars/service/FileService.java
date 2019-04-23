@@ -23,7 +23,7 @@ public class FileService {
 
     public String writeFile(Part part) throws IOException {
         var id = UUID.randomUUID().toString();
-        part.write(id);
+        part.write(Paths.get(uploadPath).resolve(id).toString());
         return id;
     }
 
