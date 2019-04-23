@@ -17,9 +17,15 @@ import java.util.UUID;
 public class AutoService {
     private final DataSource dataSource;
 
-    public AutoService() throws NamingException {
+    public AutoService() throws NamingException, SQLException {
         var context = new InitialContext();
         this.dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
+        try(var connection = dataSource.getConnection()) {
+            try(var stmt = connection.createStatement()) {
+                stmt.execute("CREATE  TABLE IF NOT EXISTS autos " +
+                        "(id TEXT PRIMARY KEY, NAME TEXT NOT NULL, description TEXT NOT NULL, image TEXT);");
+            }
+        }
     }
 
     public void create(String name, String description, Part file) throws IOException {
