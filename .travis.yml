@@ -6,7 +6,7 @@ script: mvn -e verify
 deploy:
   provider: heroku
   api_key: $HEROKU_KEY
-  app: itpark-webapp
+  app: hw-autoservice
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
