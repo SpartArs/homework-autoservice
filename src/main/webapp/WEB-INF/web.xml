@@ -8,10 +8,6 @@
         <servlet-name>catalog</servlet-name>
         <servlet-class>ru.spartars.servlet.CatalogServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
-
-        <multipart-config>
-           <location>D:/SpringCourse/homeWork/02.Autoservice/upload</location>
-        </multipart-config>
     </servlet>
     
     <servlet-mapping>
